@@ -4,15 +4,9 @@ export class magia extends Phaser.GameObjects.Arc {
   
         scene.add.existing(this);
         scene.physics.add.existing(this);
-    }
-
-    update(){
-        if (this.body.touching.up ||
-            this.body.touching.down ||
-            this.body.touching.left ||
-            this.body.touching.right
-        ) {
-            this.destroy();
-        }
+        scene.physics.add.collider(this, scene.fondo)
+        scene.physics.add.collider(this, scene.enemigos, (magia, enemigo) => {
+            this.destroy()
+        })
     }
 }

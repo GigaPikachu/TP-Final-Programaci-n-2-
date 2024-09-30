@@ -44,6 +44,7 @@ export class MainMenu extends Scene{
     }
 
     update(){
+        
         if (Phaser.Input.Keyboard.JustDown(this.cursors.up)) {
             if (this.select[0] > 2){
                 this.select[0] --;
