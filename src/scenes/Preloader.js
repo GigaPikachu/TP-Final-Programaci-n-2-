@@ -30,11 +30,11 @@ export class Preloader extends Scene{
 
         if (true){ //sprites
             // jugadores
-            this.load.spritesheet("jugador1", "../../public/assets/sprites/jugador1.png", {
+            this.load.spritesheet("jugador1", "./../../public/assets/sprites/jugador1.png", {
                 frameWidth: 16,
                 frameHeight: 16,
             });
-            this.load.spritesheet("jugador2", "../../public/assets/sprites/jugador2.png", {
+            this.load.spritesheet("jugador2", "./../../public/assets/sprites/jugador2.png", {
                 frameWidth: 16,
                 frameHeight: 16,
             });
@@ -42,36 +42,36 @@ export class Preloader extends Scene{
             //objetos
 
             //enemigos
-            this.load.spritesheet("slime", "../../public/assets/sprites/slime.png", {
+            this.load.spritesheet("slime", "./../../public/assets/sprites/slime.png", {
                 frameWidth: 16,
                 frameHeight: 16,
             });
-            this.load.spritesheet("slime2", "../../public/assets/sprites/slime2.png", {
+            this.load.spritesheet("slime2", "./../../public/assets/sprites/slime2.png", {
                 frameWidth: 16,
                 frameHeight: 32,
             });
-            this.load.spritesheet("caja", "../../public/assets/sprites/caja.png", {
+            this.load.spritesheet("caja", "./../../public/assets/sprites/caja.png", {
                 frameWidth: 16,
                 frameHeight: 32,
             });
 
             //banderas
-            this.load.image("español", "../../public/assets/images/español.png")
-            this.load.image("ingles", "../../public/assets/images/ingles.png")
+            this.load.image("español", "./../../public/assets/images/español.png")
+            this.load.image("ingles", "./../../public/assets/images/ingles.png")
         }
 
         if (true) {//interfaz
             //barra de vida
-            this.load.image("player_bar", "../../public/assets/images/barra de vida.png")
-            this.load.image("mini_bar", "../../public/assets/images/mini barra de vida.png")
+            this.load.image("player_bar", "./../../public/assets/images/barra de vida.png")
+            this.load.image("mini_bar", "./../../public/assets/images/mini barra de vida.png")
         }
 
         if (true) { //Tiles
 
-            this.load.image("fondo", "../../public/assets/background/background.png")
+            this.load.image("fondo", "./../../public/assets/background/background.png")
     
-            this.load.tilemapTiledJSON("map", "../../public/assets/tilemaps/mapa.json");
-            this.load.image("tileset", "../../public/assets/images/tileset.png")
+            this.load.tilemapTiledJSON("map", "./../../public/assets/tilemaps/mapa.json");
+            this.load.image("tileset", "./../../public/assets/images/tileset.png")
         }
 
         //  Carga los activos para el juego: reemplázalos con tus propios activos
