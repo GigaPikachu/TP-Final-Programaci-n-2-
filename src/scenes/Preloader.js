@@ -30,11 +30,11 @@ export class Preloader extends Scene{
 
         if (true){ //sprites
             // jugadores
-            this.load.spritesheet("jugador1", "./public/assets/sprites/jugador1.png", {
+            this.load.spritesheet("jugador1", "./assets/sprites/jugador1.png", {
                 frameWidth: 16,
                 frameHeight: 16,
             });
-            this.load.spritesheet("jugador2", "./public/assets/sprites/jugador2.png", {
+            this.load.spritesheet("jugador2", "./assets/sprites/jugador2.png", {
                 frameWidth: 16,
                 frameHeight: 16,
             });
