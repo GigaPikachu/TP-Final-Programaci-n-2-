@@ -1,45 +1,117 @@
-mana = 100
+import {magia} from "../components/magia.js";
+import {magia} from "../components/magia.js";
 
 //boton = [tipo de lanzamiento, elemento, daño base, coste de mana]
-boton_1 = ["proyectil", "pura", 10, 1]
-boton_2 = []
-boton_3 = []
+const elemento = [
+    0xffffff, //puro   0
+    0xff0000, //fuego  1
+    0x66ff66, //viento 2
+    0xffff33, //rayo   3
+    0x996633, //tierra 4
+    0x0099ff  //agua   5
+];
+const lanzamiento = ["proyectil", "area", "escudo"]
 
-function elementos (elemento) {
-    if (elemento == "pura") {
-        let hechizo = new magia(scene, jugador1.x, jugador1.y, ffffff /* blanco */, 0)
+var hechizo = [0, lanzamiento[1]];
 
-        /* var emiter = scene.add.particles(0, 0, "magia", { 
-            speed: 10, // Establece la velocidad inicial de las partículas a 100 unidades (la dirección se determina aleatoriamente)
-            lifespan: 100, //tiempo de vida de cada particuña //1000 milisagundos = 1 segundo
-            scale: { start: 2, end: 0 }, // Establece la escala de las partículas desde 1 (tamaño completo) hasta 0 (desapareciendo gradualmente)
-            blendMode: "ADD", // Aplica un modo de mezcla de "ADD", que crea un efecto de brillo sumando los colores de las partículas al fondo
-        }); */
+function Hechizo (jugador, scene, texture){
+    if(jugador.teclas.T2.isDown && jugador.liverar == true && jugador.accion == false){ //crear la magia y darle elemento
+        jugador.anims.stop();
+        jugador.setFrame(16);
+
+        jugador.magia = new magia(scene, jugador.x, jugador.y -16, 4, elemento[hechizo[0]], 1);
+        scene.hechizos.add(jugador.magia);
+        scene.physics.add.collider(jugador.magia, scene.fondo, (hechizo, pared) => {
+            hechizo.destroy()
+        })
+        
+        jugador.liverar = false;
     }
 
-    if (elemento == "fuego") {
-        let hechizo = new magia(scene, jugador1.x, jugador1.y, 0xffffff /* blanco */, 0)
+    else if (jugador.teclas.T2.isDown && jugador.magia.active){ //mantener cargato el hechizo
+        if (hechizo[1] == "proyectil"){
+            jugador.magia.radius += jugador.cagar_magia;
+            jugador.magia.daño += jugador.cagar_magia;
+            jugador.magia.setSize(jugador.magia.radius, jugador.magia.radius);
+            jugador.magia.body.setOffset(jugador.magia.radius - 4)
+        }
+        if (hechizo[1] == "area"){
+            jugador.magia.radius += jugador.cagar_magia * 10;
+            jugador.magia.daño += jugador.cagar_magia;
+            jugador.magia.setSize(jugador.magia.radius, jugador.magia.radius);
+        }
     }
+
+    else if (jugador.teclas.T2.isUp && jugador.liverar == false && jugador.magia.active){//lanzamiento
+        scene.physics.add.collider(jugador.magia, scene.jugadores, (magia, jugadores) => {
+            if(jugadores != jugador){
+                magia.destroy()
+                jugadores.vida[1] -= magia.daño;
+                jugadores.camara.shake(100, 0.03);
+            }
+        });
+
+
+        scene.physics.add.collider(jugador.magia, scene.enemigos, (magia, enemigo) => {
+            magia.destroy()
+            enemigo.vida[1] -= magia.daño;
+        });
+
+
+        if (jugador.liverar == false){
+            jugador.magia.y = jugador.y;
+            jugador.liverar = true;
+        }
+        jugador.anims.play(texture + "accion" + jugador.mirar, true);
+
+        scene.time.delayedCall(250, () => {
+            jugador.accion = false;
+            scene.physics.add.existing(jugador.magia);  
+
+            if (hechizo[1] == "proyectil"){
     
-    if (elemento == "viento") {
-        let hechizo = new magia(scene, jugador1.x, jugador1.y, 0xff5722 /* blanco */, 0)
+                if (jugador.mirar == "derecha"){
+                    jugador.magia.body.setVelocity(500, 0)
+                }
+    
+                else if (jugador.mirar == "izquierda"){
+                    jugador.magia.body.setVelocity(-500, 0)
+                }
+    
+                else if (jugador.mirar == "arriba"){
+                    jugador.magia.body.setVelocity(0, -500)
+                }
+                
+                else if (jugador.mirar == "abajo"){
+                    jugador.magia.body.setVelocity(0, 500)
+                }
+    
+            }
+    
+            else if(hechizo[1] == "area"){
+                jugador.magia.destroy();
+                jugador.setFrame(17);
+            }
+
+            else if (hechizo[1] == "escudo"){
+                const radius = 24; // Radio del círculo
+                let speed = 0.05; // Velocidad de rotación (a mayor número, más rápido)
+            
+                // Calcula la nueva posición del objeto giratorio usando seno y coseno
+                jugador.magia.x = jugador.x + radius * Math.cos(angle);
+                jugador.magia.y = jugador.y + radius * Math.sin(angle);
+            
+                // Incrementa el ángulo para hacer que el objeto siga girando
+                angle += speed;
+                
+            }
+        });
+
     }
-    
-    if (elemento == "rayo") {
-        let hechizo = new magia(scene, jugador1.x, jugador1.y, 0x4fc3f7 /* blanco */, 0)
-    }
-    
-    if (elemento == "tierra") {
-        let hechizo = new magia(scene, jugador1.x, jugador1.y, 0x4fc3f7 /* blanco */, 0)
-    }
-    
-    if (elemento == "agua") {
-        let hechizo = new magia(scene, jugador1.x, jugador1.y, 0x42a5f5 /* blanco */, 0)
+
+    else {
+        jugador.liverar = true;
     }
 }
 
-function lanzamientos (lanzamiento) {
-    if (lanzamiento == "proyectil") {
-        hechizo.setVelocity()
-    }
-}
+export {Hechizo}

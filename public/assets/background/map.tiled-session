@@ -9,7 +9,7 @@
     "file.lastUsedOpenFilter": "Todos los archivos (*)",
     "fileStates": {
         "": {
-            "scaleInEditor": 4
+            "scaleInEditor": 1
         },
         "#Tiles": {
             "dynamicWrapping": false,
@@ -19,8 +19,8 @@
             "scale": 2.18203125,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 165.90046544933764,
-                "y": 112.0515574650913
+                "x": 158.10955961331902,
+                "y": 153.75581811672035
             }
         },
         "D:/Nueva carpeta/PROGRAMACION 1/Magia/public/assets/tilemaps/mapa.json#Tiles": {

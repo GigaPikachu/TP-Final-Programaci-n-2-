@@ -1,8 +1,7 @@
-import {magia} from "../components/magia.js";
+import {Hechizo} from "../components/hechizo2.js";
 
 const framerate_mov = 4;
 const framerate_accion = 4;
-const velocidad = 50
 
 var vida = 100 //vida inicial
 const tiempo_invul = 1000; //tiempo de invulnerabilidad
@@ -10,18 +9,27 @@ const tiempo_invul = 1000; //tiempo de invulnerabilidad
 export class jugador extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame) {
         super(scene, x, y, texture, frame);
+        console.log(this.frame)
 
-        this.vida = []
-        this.vida[0] = vida // vida inicial
-        this.vida[1] = vida // vida restante
-
-        this.invulnerable = false;
+        //estadisticas
+        this.vida = [];
+        this.vida[0] = vida; // vida inicial
+        this.vida[1] = vida; // vida restante
+        this.liverar = true;
 
         this.barra_vida = [];
         this.barra_vida[0] = scene.physics.add.image(this.x, this.y - 12, "mini_bar");
         this.barra_vida[1] = scene.add.rectangle(this.x, this.y - 12, 16, 3, 0xff0000); scene.physics.add.existing(this.barra_vida[1]);
 
-        this.mirar = "abajo"
+        this.velocidad = 50;
+        this.cagar_magia = 0.01;
+
+        this.invulnerable = false;
+
+        this.mirar = "abajo";
+        this.magia = [];
+        this.init_x = this.x;
+        this.init_y = this.y;
 
         // Añadir el jugador a la escena y habilitar su física
         scene.add.existing(this);
@@ -31,9 +39,9 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
 
         //coliciones
         scene.physics.add.collider(this, scene.fondo)
-
         scene.physics.add.overlap(this, scene.enemigos, (jugador, enemigo) => {
             if (jugador.invulnerable == false){
+                this.camara.shake(100, 0.03);
                 jugador.vida[1] -= enemigo.ataque;
                 jugador.invulnerable = true;
 
@@ -53,15 +61,8 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
         this.setTeclas(scene, texture)
 
         //crear camara
-
-        if (typeof scene.jugador1 !== 'undefined'){
-            this.camara = scene.cameras.add(176, 0, 160, 144);
-            this.camara.startFollow(this);
-        }
-        else {
-            this.camara = scene.cameras.add(0, 0, 160, 144);
-            this.camara.startFollow(this);
-        }
+        this.camara = scene.cameras.add((160 + 16) * (scene.jugadores.countActive(true) - 1), 0, 160, 144);
+        this.camara.startFollow(this);
     }
 
     defAnims(scene, texture){
@@ -170,7 +171,8 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(texture, scene){
-        this.accion = this.anims.isPlaying && this.anims.currentAnim.key === (texture + "accion" + this.mirar); //accion = true; si el jugador se esta animando y la animacion es de accion
+        this.accion = (this.anims.isPlaying && this.anims.currentAnim.key === (texture + "accion" + this.mirar)) || this.frame.name === 16; //accion = true; si el jugador se esta animando y la animacion es de accion
+        
         if (true) { //animaciones
             this.moverse = false;
             if (this.teclas.up.isDown && this.accion == false) {
@@ -187,7 +189,7 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
                 this.moverse = true;
                 this.mirar = "izquierda";
             }
-    
+
             else if (this.teclas.right.isDown && this.accion == false) {
                 this.moverse = true;
                 this.mirar = "derecha";
@@ -215,52 +217,16 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
         }
 
         if (true) { //acciones
-            if(this.teclas.T2.isDown && this.accion == false){
-                //animar personaje
-                this.anims.stop();
-                this.anims.play(texture + "accion" + this.mirar, true);
-
-                this.magia = new magia(scene, this.x, this.y, 4, 0xffffff, 1);
-                scene.hechizos.add(this.magia)
-                scene.physics.add.collider(this.magia, scene.jugadores, (magia, jugador) => {
-                    if(jugador != this){
-                        magia.destroy()
-                        jugador.vida[1] -= 20;
-                        jugador.camara.shake(100, 0.03)
-                    }
-                })
-                scene.physics.add.collider(this.magia, scene.enemigos, (magia, enemigo) => {
-                    magia.destroy()
-                    enemigo.vida[1] -= 20;
-                })
-
-                scene.time.delayedCall(250, () => {
-                    //lanzar hechizo
-                    if(this.magia.active){ //comprueva que la magia existe
-                        if (this.mirar == "derecha"){
-                            this.magia.body.setVelocity(500, 0)
-                        }
-                        else if (this.mirar == "izquierda"){
-                            this.magia.body.setVelocity(-500, 0)
-                        }
-                        else if (this.mirar == "arriba"){
-                            this.magia.body.setVelocity(0, -500)
-                        }
-                        else if (this.mirar == "abajo"){
-                            this.magia.body.setVelocity(0, 500)
-                        }
-                    }
-                });
-            }
+            Hechizo (this, scene, texture)
         }
 
         if (true) { //movimientos
             // Movimiento hacia arriba y abajo
             if (this.teclas.up.isDown && this.accion == false) {
-                this.body.setVelocityY(-velocidad);
+                this.body.setVelocityY(-this.velocidad);
             }
             else if (this.teclas.down.isDown && this.accion == false) {
-                this.body.setVelocityY(velocidad);
+                this.body.setVelocityY(this.velocidad);
             }
             else {
                 this.body.setVelocityY(0);
@@ -268,10 +234,10 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
     
             // Movimiento hacia la izquierda y derecha
             if (this.teclas.left.isDown && this.accion == false) {
-                this.body.setVelocityX(-velocidad);
+                this.body.setVelocityX(-this.velocidad);
             }
             else if (this.teclas.right.isDown && this.accion == false) {
-                this.body.setVelocityX(velocidad);
+                this.body.setVelocityX(this.velocidad);
             }
             else {
                 this.body.setVelocityX(0);
@@ -282,8 +248,19 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
             for(this.i = 0; this.i <= 1; this.i ++){
                 this.barra_vida[this.i].x = this.x; this.barra_vida[this.i].y = this.y - 12;
             }
-            this.barra_vida[1].setSize(16 / this.vida[0] * this.vida[1], 3);
 
-        }
-    }
-}
+            if (this.vida[1] >= 0){
+                this.barra_vida[1].setSize(16 / this.vida[0] * this.vida[1], 3);
+            }
+            else {
+                this.vida[1] = 0
+            }
+
+            if (this.vida[1] == 0){
+                this.vida[1] = this.vida[0];
+                this.x = this.init_x;
+                this.y = this.init_y;
+            };
+        };
+    };
+};

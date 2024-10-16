@@ -1,0 +1,18 @@
+@echo off
+:: Agregar los archivos al área de preparación:
+git add .
+
+:: Esperar unos segundos
+timeout /t 2 /nobreak >nul
+
+:: Hacer el commit:
+git commit -m "Descripción de los cambios"
+
+:: Esperar unos segundos
+timeout /t 2 /nobreak >nul
+
+:: Subir los cambios a GitHub
+git push origin master
+
+:: Mantener la ventana abierta
+pause

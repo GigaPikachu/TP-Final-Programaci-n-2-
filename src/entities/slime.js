@@ -1,13 +1,8 @@
-const distancia_min = 64;
-const velocidad = 25;
-const framerate_mov = 8;
-
 var vida = 30
 
 export class slime extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame) {
         super(scene, x, y, texture, frame);
-      
         // Añadir el slime a la escena y habilitar su física
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -16,20 +11,27 @@ export class slime extends Phaser.Physics.Arcade.Sprite {
         this.body.setOffset(0, 16);
         this.tocando_piso = true;
 
-        //vida
+        //estadisticas
+        this.velocidad = 25;
+        this.framerate_mov = this.velocidad / 2;
+        this.distancia_min = 96;
+        this.ataque = 20;
+
+        this.estado = "nada"
+
         this.vida = []
         this.vida[0] = vida // vida inicial
         this.vida[1] = vida //vida restante
 
         this.barra_vida = []
         this.barra_vida[0] = scene.physics.add.image(this.x, this.y - 12, "mini_bar");
-        this.barra_vida[1] = scene.add.rectangle(this.x, this.y - 12, 16, 3, 0xff0000); scene.physics.add.existing(this.barra_vida[1]);
-
-        this.ataque = 10;
+        this.barra_vida[1] = scene.add.rectangle(this.x, this.y - 16, 16, 3, 0xff0000); scene.physics.add.existing(this.barra_vida[1]);
 
         //colicionadores
+        this.setOrigin(0.75);
         scene.enemigos.add(this);
         scene.physics.add.collider(this, scene.fondo)
+        scene.physics.add.collider(this, scene.enemigos)
 
         // Definir animaciones
         if (texture == "slime2"){
@@ -43,28 +45,28 @@ export class slime extends Phaser.Physics.Arcade.Sprite {
             frames: scene.anims.generateFrameNumbers(texture, {
                 frames: [0, 1, 2, 3, 4, 3, 2, 1, 0]
             }),
-            frameRate: framerate_mov,
+            frameRate: this.framerate_mov,
             repeat: 1 // Repetir la animación infinitamente
         });
     }
 
     update(){
         if(true){//seguir al jugador
-            var jugadorcerca = null;
+            this.jugadorcerca = null;
 
             if (this.vida[1] > 0){
                 this.scene.jugadores.getChildren().forEach((miembro) => { //repasa todos los miembros de un grupo
-                    if (Phaser.Math.Distance.Between(this.x, this.y, miembro.x, miembro.y) <= distancia_min){
-                        jugadorcerca = miembro;
+                    if (Phaser.Math.Distance.Between(this.x, this.y, miembro.x, miembro.y) <= this.distancia_min){
+                        this.jugadorcerca = miembro;
                     }
                 })
     
-                if (jugadorcerca != null){
+                if (this.jugadorcerca != null){
                     this.anims.play("salto_slime", true);
-                    this.scene.physics.moveToObject(this, jugadorcerca, velocidad);
+                    this.scene.physics.moveToObject(this, this.jugadorcerca, this.velocidad);
                 }
     
-                else if (jugadorcerca == null || this.setVelocity(0, 0)){
+                else if (this.jugadorcerca == null || this.setVelocity(0, 0)){
                     this.anims.stop()
                     this.setFrame(0)
                     this.setVelocity(0, 0);

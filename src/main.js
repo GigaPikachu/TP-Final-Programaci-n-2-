@@ -1,8 +1,12 @@
 import { Boot } from './scenes/Boot';
-import { Game } from './scenes/Game';
+import { VS } from './scenes/VSmode';
+import { Coop } from './scenes/Coop';
 import { GameOver } from './scenes/GameOver';
 import { MainMenu } from './scenes/Menus/MainMenu';
 import { Preloader } from './scenes/Preloader';
+
+//Hud
+import { Hud } from './scenes/Hud/Hud.js';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -26,7 +30,7 @@ const config = {
         default: "arcade",
         arcade: {
             gravity: { y: 0, x: 0 },
-            debug: false, //muestra los colaiders y los movimientos
+            debug: true, //muestra los colaiders y los movimientos
         },
     },
   
@@ -35,9 +39,11 @@ const config = {
     scene: [
         Preloader,
         MainMenu,
-        Game,
+        VS,
+        Coop,
         Boot,
         GameOver,
+        Hud,
     ]
 };
 

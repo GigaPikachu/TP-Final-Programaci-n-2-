@@ -34,33 +34,53 @@ export class Preloader extends Scene{
                 frameWidth: 16,
                 frameHeight: 16,
             });
+
             this.load.spritesheet("jugador2", "../../public/assets/sprites/jugador2.png", {
                 frameWidth: 16,
                 frameHeight: 16,
             });
 
-            //objetos
+            if (true){ //objetos
+                this.load.spritesheet("caja", "../../public/assets/sprites/caja.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
+                });
 
-            //enemigos
-            this.load.spritesheet("slime", "../../public/assets/sprites/slime.png", {
-                frameWidth: 16,
-                frameHeight: 16,
-            });
-            this.load.spritesheet("slime2", "../../public/assets/sprites/slime2.png", {
-                frameWidth: 16,
-                frameHeight: 32,
-            });
-            this.load.spritesheet("caja", "../../public/assets/sprites/caja.png", {
-                frameWidth: 16,
-                frameHeight: 32,
-            });
+                this.load.spritesheet("bandera", "../../public/assets/sprites/bandera.png", {
+                    frameWidth: 16,
+                    frameHeight: 32,
+                });
 
-            //banderas
+                this.load.spritesheet("pocion", "../../public/assets/sprites/pocion.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
+                });
+
+                this.load.image("escudo", "../../public/assets/sprites/escudo.png")
+    
+                this.load.spritesheet("magia", "../../public/assets/sprites/magia.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
+                });
+            }
+
+            if (true){ //enemigos
+                this.load.spritesheet("slime", "../../public/assets/sprites/slime.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
+                });
+                this.load.spritesheet("slime2", "../../public/assets/sprites/slime2.png", {
+                    frameWidth: 16,
+                    frameHeight: 32,
+                });
+            }
+
+            //idiomas
             this.load.image("español", "../../public/assets/images/español.png")
             this.load.image("ingles", "../../public/assets/images/ingles.png")
         }
 
-        if (true) {//interfaz
+        if (true) { //interfaz
             //barra de vida
             this.load.image("player_bar", "../../public/assets/images/barra de vida.png")
             this.load.image("mini_bar", "../../public/assets/images/mini barra de vida.png")
@@ -76,8 +96,6 @@ export class Preloader extends Scene{
 
         //  Carga los activos para el juego: reemplázalos con tus propios activos
         this.load.setPath('assets');
-
-        this.load.image('logo', 'logo.png');
     }
 
     async create ()
