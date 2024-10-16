@@ -38,6 +38,31 @@ export class Preloader extends Scene{
                 frameWidth: 16,
                 frameHeight: 16,
             });
+
+            if (true){ //objetos
+                this.load.spritesheet("caja", "./assets/sprites/caja.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
+                });
+
+                this.load.spritesheet("bandera", "./assets/sprites/bandera.png", {
+                    frameWidth: 16,
+                    frameHeight: 32,
+                });
+
+                this.load.spritesheet("pocion", "./assets/sprites/pocion.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
+                });
+
+                this.load.image("escudo", "./assets/sprites/escudo.png")
+    
+                this.load.spritesheet("magia", "./assets/sprites/magia.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
+                });
+            }
+
             //enemigos
             this.load.spritesheet("slime", "./assets/sprites/slime.png", {
                 frameWidth: 16,
