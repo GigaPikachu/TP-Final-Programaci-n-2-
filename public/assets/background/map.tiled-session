@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "D:/Nueva carpeta/PROGRAMACION 1/Magia/public/assets/tilemaps/mapa.json",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "Todos los archivos (*)",
@@ -35,7 +35,6 @@
     "map.tileWidth": 16,
     "map.width": 20,
     "openFiles": [
-        "D:/Nueva carpeta/PROGRAMACION 1/Magia/public/assets/tilemaps/mapa.json"
     ],
     "project": "map.tiled-project",
     "property.type": "bool",

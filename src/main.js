@@ -30,7 +30,7 @@ const config = {
         default: "arcade",
         arcade: {
             gravity: { y: 0, x: 0 },
-            debug: true, //muestra los colaiders y los movimientos
+            debug: false, //muestra los colaiders y los movimientos
         },
     },
   

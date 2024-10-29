@@ -2,7 +2,7 @@ import { Scene } from 'phaser';
 
 import { caja } from "../entities/caja.js"
 import { jugador } from "../entities/jugador2.js"
-import { slime } from "../entities/slime.js"
+import { slime } from "../entities/enemy/slime.js"
 import { bandera } from "../entities/bandera.js"
 
 const time_gen_enemy = 5000;
@@ -17,7 +17,8 @@ export class VS extends Scene {
     init(data) {
         this.game_over_timeout = 120;
         this.text = data.text;
-        this.scene.launch("Hud", { text: this.text })
+        this.idioma = data.idioma;
+        this.scene.launch("Hud", { text: this.text, idioma: this.idioma })
 
         this.timmer_event = this.time.addEvent({
           delay: 1000,
@@ -28,7 +29,7 @@ export class VS extends Scene {
     
             if (this.game_over_timeout === 0) {
               this.scene.stop("Hud");
-              this.scene.start("GameOver", {text: this.text, jugador1: this.jugador1.puntos, jugador2: this.jugador2.puntos});
+              this.scene.start("GameOver", {text: this.text, idioma: this.idioma, jugador1: this.jugador1.puntos, jugador2: this.jugador2.puntos});
             }
           },
         });

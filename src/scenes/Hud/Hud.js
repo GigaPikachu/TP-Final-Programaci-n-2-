@@ -15,13 +15,13 @@ export class Hud extends Scene {
   }
 
   create() {
-    this.tiempo = this.add.text(336 / 2, 16, this.text[6][1] + "\n" + this.times, {fontFamily: 'GameBoy', fontSize: 8, color: '#ffffff',stroke: '#000000', strokeThickness: 4, align: 'center'}).setOrigin(0.5);
+    this.tiempo = this.add.text(336 / 2, 16, this.text[6][this.idioma] + "\n" + this.times, {fontFamily: 'GameBoy', fontSize: 8, color: '#ffffff',stroke: '#000000', strokeThickness: 4, align: 'center'}).setOrigin(0.5);
     this.puntaje[0] = this.add.text(16, 16, "0", {fontFamily: 'GameBoy', fontSize: 8, color: '#00ff00',stroke: '#000000', strokeThickness: 4, align: 'center'}).setOrigin(0.5);
     this.puntaje[1] = this.add.text(336 - 16, 16, "0", {fontFamily: 'GameBoy', fontSize: 8, color: '#0000ff',stroke: '#000000', strokeThickness: 4, align: 'center'}).setOrigin(0.5);
   }
 
   update_time (time) {
-    this.tiempo.setText(this.text[6][1] + "\n" + time);
+    this.tiempo.setText(this.text[6][this.idioma] + "\n" + time);
   }
 
   update_points(Jugador1, jugador2) {

@@ -9,63 +9,50 @@ const elemento = [
     0x996633, //tierra 4
     0x0099ff  //agua   5
 ];
-const lanzamiento = ["proyectil", "area", "escudo"]
 
+const lanzamiento = ["proyectil", "area", "escudo"]
 
 const velocidad = 500;
 
-var hechizo = [1, "proyectil"];
+var hechizo1 = [1, "proyectil"];
+var hechizo2 = [1, "proyectil"];
 
 function Hechizo (jugador, scene, texture){
-    if (hechizo[1] == "proyectil"){
-        if(jugador.teclas.T1.isDown && jugador.liverar == true && jugador.accion == false){
-            jugador.anims.stop();
-            jugador.setFrame(16);
-
+    if (/* hechizo[1] == "proyectil" */ true ){
+        if(jugador.teclas.T1.isDown && jugador.liverar == true && jugador.accion == false && jugador.energia[1] > 20){
             
-            for (var i = 0; true; i ++){
+            for (var i = 4; true; i ++){
                 if (jugador.magia[i] == null || !jugador.magia[i].active){
                     jugador.magia_id = i;
-                    jugador.magia[i] = new magia(scene, jugador.x, jugador.y -16, 4, elemento[hechizo[0]], 1);
-                    scene.hechizos.add(jugador.magia[i]);
+                    jugador.magia[i] = new magia(scene, jugador.x, jugador.y -16, 4, elemento[hechizo1[0]], 1);
+                    scene.physics.add.existing(jugador.magia[jugador.magia_id]);
+                    jugador.energia[1] -= 20;
                     break;
                 }
             }
 
-            scene.physics.add.collider(scene.hechizos, scene.fondo, (hechizo, pared) => {
-                hechizo.destroy()
-            })
+            jugador.anims.stop();
+            jugador.setFrame(16);
             
             jugador.liverar = false;
         }
     
         else if (jugador.teclas.T1.isDown && jugador.magia[jugador.magia_id].active){ //mantener cargato el hechizo
             jugador.magia[jugador.magia_id].radius += jugador.cagar_magia;
-            jugador.magia[jugador.magia_id].daño += jugador.cagar_magia;
+            jugador.magia[jugador.magia_id].daño += jugador.cagar_magia * 3;
             jugador.magia[jugador.magia_id].setSize(jugador.magia[jugador.magia_id].radius, jugador.magia[jugador.magia_id].radius);
             jugador.magia[jugador.magia_id].body.setOffset(jugador.magia[jugador.magia_id].radius - 4)
         }
     
         else if (jugador.teclas.T1.isUp && jugador.liverar == false && jugador.magia[jugador.magia_id].active){//lanzamiento
-            scene.physics.add.collider(jugador.magia[jugador.magia_id], scene.jugadores, (magia, jugadores) => { //golpear al otro jugador
-                if(jugadores != jugador){ //verifica que el jugador golpeado no sea a si mismo
-                    magia.destroy()
-                    jugadores.vida[1] -= magia.daño;
-                    jugadores.camara.shake(100, 0.03);
-                }
-            });
-    
-            scene.physics.add.collider(jugador.magia[jugador.magia_id], scene.enemigos, (magia, enemigo) => { //golpea a un enemigo
-                magia.destroy()
-                enemigo.vida[1] -= magia.daño;
-            });
+
+            scene.hechizos.add(jugador.magia[jugador.magia_id]);
             
             jugador.magia[jugador.magia_id].y = jugador.y; //reposisiona la magia desde arriba del jugador a el centro del jugador
             jugador.liverar = true;
             jugador.anims.play(texture + "accion" + jugador.mirar, true);
     
             scene.time.delayedCall(250, () => {
-                scene.physics.add.existing(jugador.magia[jugador.magia_id]);
         
                 if (jugador.mirar == "derecha"){
                     jugador.magia[jugador.magia_id].body.setVelocity(velocidad, 0)
@@ -82,11 +69,57 @@ function Hechizo (jugador, scene, texture){
                 else if (jugador.mirar == "abajo"){
                     jugador.magia[jugador.magia_id].body.setVelocity(0, velocidad)
                 }
+
+                if (scene.scene.key == "VS"){
+                    scene.physics.add.collider(jugador.magia[jugador.magia_id], scene.jugadores, (magia, jugadores) => { //golpear al otro jugador
+                        if(jugadores != jugador){ //verifica que el jugador golpeado no sea a si mismo
+                            magia.destruir()
+                            jugadores.vida[1] -= magia.daño;
+                            jugadores.camara.shake(100, 0.03);
+                            jugadores.hurt.play()
+                        }
+                    });
+                }
+    
+                scene.physics.add.collider(scene.hechizos, scene.fondo, (hechizo, pared) => {
+                    hechizo.destruir()
+                })
+        
+                scene.physics.add.collider(jugador.magia[jugador.magia_id], scene.enemigos, (magia, enemigo) => { //golpea a un enemigo
+                    magia.destruir()
+                    enemigo.vida[1] -= magia.daño;
+                    console.log(magia.daño);
+                });
             })
         }
     }
 
-    else if (hechizo[1] == "area"){
+    if (true){ // impulso
+        if(jugador.teclas.T2.isDown && jugador.accion == false){
+        
+            if (jugador.mirar == "derecha"){
+                jugador.anims.play(texture + "accion" + jugador.mirar, true);
+                jugador.body.setVelocityX(-100);
+            }
+
+            else if (jugador.mirar == "izquierda"){
+                jugador.anims.play(texture + "accion" + jugador.mirar, true);
+                jugador.body.setVelocityX(100);
+            }
+
+            else if (jugador.mirar == "arriba"){
+                jugador.anims.play(texture + "accion" + jugador.mirar, true);
+                jugador.body.setVelocityY(-100);
+            }
+
+            else if (jugador.mirar == "abajo"){
+                jugador.anims.play(texture + "accion" + jugador.mirar, true);
+                jugador.body.setVelocityY(100);
+            }
+        }
+    }
+/* 
+    if ( hechizo[1] == "area" true ){
         if(jugador.teclas.T2.isDown){
             jugador.anims.stop();
             jugador.setFrame(16);
@@ -107,7 +140,7 @@ function Hechizo (jugador, scene, texture){
             
             jugador.liverar = false;
             jugador.accion = true;
-        }
+        } 
 
         else if (jugador.teclas.T2.isUp && jugador.liverar == false && jugador.magia[jugador.magia_id].active){//
 
@@ -129,48 +162,41 @@ function Hechizo (jugador, scene, texture){
                 jugador.magia[jugador.magia_id].destroy();
             })
         }
-    }
+    }*/
     
-    else if (hechizo[1] == "detector"){
-        if(jugador.teclas.T2.isDown && jugador.liverar == true && jugador.accion == false){
-            jugador.anims.stop();
-            jugador.setFrame(16);
-    
-            jugador.magia[jugador.magia_id] = new magia(scene, jugador.x, jugador.y -16, 4, elemento[hechizo[0]], 1);
-            scene.hechizos.add(jugador.magia[jugador.magia_id]);
-            scene.physics.add.collider(jugador.magia[jugador.magia_id], scene.fondo, (hechizo, pared) => {
-                hechizo.destroy()
-            })
-        }
-    
-    }
-    
-    else if (hechizo[1] == "torre"){
-    }
-    
-    else if (hechizo[1] == "escudo"){ //crear magia escudo
-        if(jugador.teclas.T3.isDown && jugador.accion == false){
+    if (/* hechizo[1] == "escudo" */ true){ //crear magia escudo
+        if(jugador.teclas.T3.isDown && jugador.accion == false && jugador.energia[1] > 60){
+            if (jugador.escudo != null || jugador.escudo == []){
+                for (var h = 1; h < 4; h ++){
+                    jugador.magia[jugador.escudo[h]].destruir();
+                }
+            }
+
             jugador.escudo = [];
             for (var h = 1; h < 4; h ++){
                 for (var i = 0; true; i ++){
                     if (jugador.magia[i] == null || !jugador.magia[i].active){
                         jugador.magia_id = i;
                         jugador.escudo[h] = jugador.magia_id;
-                        jugador.magia[i] = new magia(scene, jugador.x, jugador.y, 4, elemento[hechizo[0]], 1);
+                        jugador.magia[i] = new magia(scene, jugador.x, jugador.y, 4, elemento[hechizo2[0]], 1);
                         jugador.magia[i].angulo = 100 / 3 * h;
+                        jugador.energia[1] -= 20;
                         
                         scene.physics.add.existing(jugador.magia[i]);
 
-                        scene.physics.add.collider(jugador.magia[i], scene.jugadores, (magia, jugadores) => { //golpear al otro jugador
-                            if(jugadores != jugador){ //verifica que el jugador golpeado no sea a si mismo
-                                magia.destroy()
-                                jugadores.vida[1] -= magia.daño;
-                                jugadores.camara.shake(100, 0.03);
-                            }
-                        });
+                        if (scene.scene.key == "VS"){
+                            scene.physics.add.collider(jugador.magia[i], scene.jugadores, (magia, jugadores) => { //golpear al otro jugador
+                                if(jugadores != jugador){ //verifica que el jugador golpeado no sea a si mismo
+                                    magia.destruir()
+                                    jugadores.vida[1] -= magia.daño;
+                                    jugadores.hurt.play()
+                                    jugadores.camara.shake(100, 0.03);
+                                }
+                            });
+                        }
                 
                         scene.physics.add.collider(jugador.magia[i], scene.enemigos, (magia, enemigo) => { //golpea a un enemigo
-                            magia.destroy()
+                            magia.destruir()
                             enemigo.vida[1] -= magia.daño;
                         });
                         break;
@@ -188,16 +214,18 @@ function Hechizo (jugador, scene, texture){
 
         else if(jugador.magia[jugador.magia_id] != null) { //lanzar magia
             for (var i = 1; i < 4; i++){
-                if(jugador.magia[jugador.escudo[i]].active) {
-                    jugador.magia[jugador.escudo[i]].radio = 24; // Radio del círculo
-                    jugador.magia[jugador.escudo[i]].speed = 0.05; // Velocidad de rotación (a mayor número, más rápido)
-                
-                    // Calcula la nueva posición del objeto giratorio usando seno y coseno
-                    jugador.magia[jugador.escudo[i]].x = jugador.x + jugador.magia[jugador.escudo[i]].radio * Math.cos(jugador.magia[jugador.escudo[i]].angulo);
-                    jugador.magia[jugador.escudo[i]].y = jugador.y + jugador.magia[jugador.escudo[i]].radio * Math.sin(jugador.magia[jugador.escudo[i]].angulo);
-                
-                    // Incrementa el ángulo para hacer que el objeto siga girando
-                    jugador.magia[jugador.escudo[i]].angulo += jugador.magia[jugador.escudo[i]].speed;
+                if (jugador.escudo != null){
+                    if(jugador.magia[jugador.escudo[i]].active) {
+                        jugador.magia[jugador.escudo[i]].radio = 24; // Radio del círculo
+                        jugador.magia[jugador.escudo[i]].speed = 0.05; // Velocidad de rotación (a mayor número, más rápido)
+                    
+                        // Calcula la nueva posición del objeto giratorio usando seno y coseno
+                        jugador.magia[jugador.escudo[i]].x = jugador.x + jugador.magia[jugador.escudo[i]].radio * Math.cos(jugador.magia[jugador.escudo[i]].angulo);
+                        jugador.magia[jugador.escudo[i]].y = jugador.y + jugador.magia[jugador.escudo[i]].radio * Math.sin(jugador.magia[jugador.escudo[i]].angulo);
+                    
+                        // Incrementa el ángulo para hacer que el objeto siga girando
+                        jugador.magia[jugador.escudo[i]].angulo += jugador.magia[jugador.escudo[i]].speed;
+                    }
                 }
             }
         }

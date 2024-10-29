@@ -13,9 +13,32 @@ export class MainMenu extends Scene{
         this.menu = [] //array donde se guarda la variable que crea los textos del menu
 
         this.select = [2, 'Coop'];
+
+        //efectos de sonido
+        this.desplazarse = this.sound.add('desplazarse', {
+            loop: false, // La música se repite en bucle
+            volume: 1, // Nivel de volumen (0 a 1)
+        });
+
+        this.seleccionar = this.sound.add('seleccionar', {
+            loop: false, // La música se repite en bucle
+            volume: 1, // Nivel de volumen (0 a 1)
+        });
     }
     
     create () {
+
+        //musica
+        this.musica = this.sound.add('menu', {
+            loop: true, // La música se repite en bucle
+            volume: 1, // Nivel de volumen (0 a 1)
+        });
+
+        this.musica.play();
+
+        //fondo
+        this.background = this.add.image(0, 0, "MainMenu").setOrigin(0);
+
         //tilulo
         this.titulo = this.add.text(336/2, 24, this.text[1][this.idioma], {fontFamily: 'GameBoy', fontSize: 16, color: '#ffffff',stroke: '#000000', strokeThickness: 4, align: 'center'}).setOrigin(0.5);
 
@@ -30,44 +53,68 @@ export class MainMenu extends Scene{
 
         this.español.on('pointerdown', () => {
             this.idioma = 1;
+            this.musica.stop();
             this.scene.restart({text: this.text, idioma: this.idioma});
         })
 
         this.ingles.on('pointerdown', () => {
             this.idioma = 2;
+            this.musica.stop();
             this.scene.restart({text: this.text, idioma: this.idioma});
         })
 
         //teclas
         this.cursors = this.input.keyboard.createCursorKeys();
         this.cursors.enter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
+
+        //fundido
+        this.fundido = this.add.image(0, 0, "fundido").setOrigin(0);
+        this.fundido.alpha = 0;
     }
 
     update(){
         
         if (Phaser.Input.Keyboard.JustDown(this.cursors.up)) {
+            this.desplazarse.play();
             if (this.select[0] > 2){
                 this.select[0] --;
             }
             else {
                 this.select[0] = 4
             }
-            console.log(this.select)
         }
 
         else if (Phaser.Input.Keyboard.JustDown(this.cursors.down)) {
+            this.desplazarse.play();
             if (this.select[0] < 4){
                 this.select[0] ++;
             }
             else {
                 this.select[0] = 2;
             }
-            console.log(this.select)
         }
 
         else if (Phaser.Input.Keyboard.JustDown(this.cursors.enter)) {
-            
-            this.scene.start(this.select[1], {text: this.text, idioma: this.idioma})
+            this.musica.stop();
+            this.seleccionar.play();
+
+            this.time_fundido = this.time.addEvent({
+                delay: 62,
+                loop: true,
+                callback: () => {
+                    this.fundido.alpha += 0.0625;
+                },
+            });
+
+            this.next_scene = this.time.addEvent({
+                delay: 1000,
+                loop: false,
+                callback: () => {
+                    this.time_fundido.remove();
+                    this.next_scene.remove();
+                    this.scene.start(this.select[1], {text: this.text, idioma: this.idioma})
+                },
+            });
         }
 
         for(var i = 2; i <= 4; i++) {

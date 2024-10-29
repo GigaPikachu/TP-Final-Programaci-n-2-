@@ -32,11 +32,12 @@ export class Preloader extends Scene{
             // jugadores
             this.load.spritesheet("jugador1", "./assets/sprites/jugador1.png", {
                 frameWidth: 16,
-                frameHeight: 16,
+                frameHeight: 24,
             });
+
             this.load.spritesheet("jugador2", "./assets/sprites/jugador2.png", {
                 frameWidth: 16,
-                frameHeight: 16,
+                frameHeight: 24,
             });
 
             if (true){ //objetos
@@ -61,25 +62,48 @@ export class Preloader extends Scene{
                     frameWidth: 16,
                     frameHeight: 16,
                 });
+    
+                this.load.spritesheet("puerta", "./assets/sprites/puerta.png", {
+                    frameWidth: 48,
+                    frameHeight: 32,
+                });
             }
 
-            //enemigos
-            this.load.spritesheet("slime", "./assets/sprites/slime.png", {
-                frameWidth: 16,
-                frameHeight: 16,
-            });
-            this.load.spritesheet("slime2", "./assets/sprites/slime2.png", {
-                frameWidth: 16,
-                frameHeight: 32,
-            });
-            this.load.spritesheet("caja", "./assets/sprites/caja.png", {
-                frameWidth: 16,
-                frameHeight: 32,
-            });
+            if (true){ //enemigos
+                this.load.spritesheet("hongo", "./assets/sprites/hongo.png", {
+                    frameWidth: 16,
+                    frameHeight: 32,
+                });
+                this.load.spritesheet("slime2", "./assets/sprites/slime2.png", {
+                    frameWidth: 16,
+                    frameHeight: 32,
+                });
+                this.load.spritesheet("esqueleto", "./assets/sprites/esqueleto.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
+                });
 
-            //banderas
+                this.load.spritesheet("nigromante", "./assets/sprites/nigromante.png", {
+                    frameWidth: 16,
+                    frameHeight: 24,
+                });
+            }
+
+            //idiomas
             this.load.image("español", "./assets/images/español.png")
             this.load.image("ingles", "./assets/images/ingles.png")
+        }
+
+        if(true) { // musica
+            this.load.audio("menu", "./assets/sounds/menu/menu.mp3");
+            
+            this.load.audio("seleccionar", "./assets/sounds/menu/seleccionar.wav");
+            this.load.audio("desplazarse", "./assets/sounds/menu/desplazarse.wav");
+
+            this.load.audio("lose", "./assets/sounds/players/end game (lose).mp3");
+            this.load.audio("hurt", "./assets/sounds/players/hurt.mp3");
+
+            this.load.audio("romper", "./assets/sounds/efectos de sonido/romper.wav");
         }
 
         if (true) { //interfaz
@@ -89,11 +113,20 @@ export class Preloader extends Scene{
         }
 
         if (true) { //Tiles
+            this.load.image("MainMenu", "./assets/background/MainMenu.png");
+            this.load.image("fundido", "./assets/background/fundido.png");
+            this.load.image("fondo", "./assets/background/background.png");
+            this.load.image("vision", "./assets/background/vision.png");
 
-            this.load.image("fondo", "./assets/background/background.png")
+            //mapa de pruebas
     
             this.load.tilemapTiledJSON("map", "./assets/tilemaps/mapa.json");
-            this.load.image("tileset", "./assets/images/tileset.png")
+
+            //Coop Nivel 1
+            this.load.image("tileset", "./assets/images/tileset.png");
+    
+            this.load.tilemapTiledJSON("Nivel_1", "./assets/background/Coop/Nivel_1.json");
+
         }
 
         //  Carga los activos para el juego: reemplázalos con tus propios activos

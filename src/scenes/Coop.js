@@ -2,9 +2,12 @@ import { Scene } from 'phaser';
 
 import { caja } from "../entities/caja.js"
 import { jugador } from "../entities/jugador2.js"
-import { slime } from "../entities/slime.js"
+import { slime } from "../entities/enemy/slime.js"
+import { hongo } from "../entities/enemy/hongo.js"
+import { esqueleto } from "../entities/enemy/esqueleto.js"
 
 import { next_level } from "../components/next_level.js"
+import { puerta } from "../entities/puerta.js"
 
 const time_gen_enemy = 5000;
 const enemy_max = 0; // enemigos maximos (menos 1)
@@ -22,9 +25,9 @@ export class Coop extends Scene {
 
     create() {
         if(true){ //fondo
-            var map = this.make.tilemap({key:"map"})
-            var tileset = map.addTilesetImage("Tiles", "tileset");
-            this.fondo = map.createLayer("Capa de patrones 1", tileset)
+            var map = this.make.tilemap({key:"Nivel_1"})
+            var tileset = map.addTilesetImage("Tiled", "tileset");
+            this.fondo = map.createLayer("Background", tileset)
             this.fondo.setCollisionByProperty({colicionador: true})
         }
 
@@ -32,7 +35,7 @@ export class Coop extends Scene {
             this.enemigos = this.physics.add.group();
 
             this.slime = []
-            this.slime[0] = new slime(this, 144, 64, "slime2", 0);
+            this.slime[0] = new esqueleto(this, 144, 64, "esqueleto", 0);
 
             this.time.addEvent({
                 delay: time_gen_enemy,
@@ -42,7 +45,7 @@ export class Coop extends Scene {
                         if (this.slime[i] == null || !this.slime[i].active){
                             this.pos_x = Phaser.Math.Between(96 + 8, 224 - 8);
                             this.pos_y = Phaser.Math.Between(48 + 8, 208 - 8);
-                            this.slime[i] = new slime(this, this.pos_x, this.pos_y, "slime2", 0);
+                            this.slime[i] = new esqueleto(this, this.pos_x, this.pos_y, "esqueleto", 0);
                             break;
                         }
                     }
@@ -65,6 +68,9 @@ export class Coop extends Scene {
             this.caja = new caja(this, 64, 64, "caja", 0)
 
             this.next_level = new next_level(this, 16 * 16, 16);
+
+            this.banderas = this.physics.add.group()
+            this.puerta = new puerta(this, 16 * 17, 16, 0, 160, 144 + 64 + 32, 160, 16)
         }
     }
 
@@ -75,6 +81,10 @@ export class Coop extends Scene {
         this.enemigos.getChildren().forEach((enemigos) => {
             enemigos.update()
         })
-        this.next_level.update()
+
+        if (this.puerta.active){
+            this.puerta.update()
+            this.next_level.update()
+        }
     }
 }

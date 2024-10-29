@@ -9,9 +9,17 @@ export class GameOver extends Scene
     }
 
     init(data){
+        this.text = data.text;
+        this.idioma = data.idioma;
         this.puntos = [];
         this.puntos[0] = data.jugador1 || 0;
         this.puntos[1] = data.jugador2 || 0;
+
+        //musica
+        this.musica = this.sound.add('lose', {
+            loop: false, // La música se repite en bucle
+            volume: 1, // Nivel de volumen (0 a 1)
+        });
     }
 
     create () {
@@ -28,7 +36,13 @@ export class GameOver extends Scene
             this.jugador2.setFrame(17)
         }
 
-        this.add.text(320 / 2, 32, 'Game Over', {
+        else{
+            this.musica.play();
+            this.jugador1.setFrame(17)
+            this.jugador2.setFrame(17)
+        }
+
+        this.add.text(320 / 2, 32, this.text[7][this.idioma], {
             fontFamily: 'GameBoy', fontSize: 16, color: '#000000',
             stroke: '#ffffff', strokeThickness: 4,
             align: 'center'
