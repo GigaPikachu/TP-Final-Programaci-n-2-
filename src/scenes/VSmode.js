@@ -18,20 +18,20 @@ export class VS extends Scene {
         this.game_over_timeout = 120;
         this.text = data.text;
         this.idioma = data.idioma;
-        this.scene.launch("Hud", { text: this.text, idioma: this.idioma })
+        this.scene.launch("Hud_VS", { text: this.text, idioma: this.idioma })
 
         this.timmer_event = this.time.addEvent({
-          delay: 1000,
-          loop: true,
-          callback: () => {
-            this.game_over_timeout--;
-            this.scene.get("Hud").update_time(this.game_over_timeout);
+            delay: 1000,
+            loop: true,
+            callback: () => {
+                this.game_over_timeout--;
+                this.scene.get("Hud_VS").update_time(this.game_over_timeout);
     
-            if (this.game_over_timeout === 0) {
-              this.scene.stop("Hud");
-              this.scene.start("GameOver", {text: this.text, idioma: this.idioma, jugador1: this.jugador1.puntos, jugador2: this.jugador2.puntos});
-            }
-          },
+                if (this.game_over_timeout === 0) {
+                    this.scene.stop("Hud_VS");
+                    this.scene.start("GameOver", {text: this.text, idioma: this.idioma, jugador1: this.jugador1.puntos, jugador2: this.jugador2.puntos});
+                }
+            },
         });
     }
 
@@ -77,8 +77,8 @@ export class VS extends Scene {
 
         if (true) { //objetos
             this.banderas = this.physics.add.group()
-            this.bandera = new bandera (this, 160, 144 + 64 + 32, 0);
-            this.bandera = new bandera (this, 160, 16, 0);
+            this.bandera = new bandera (this, 2, 1, 0);
+            this.bandera = new bandera (this, 3, 4, 0);
 
             this.objetos = this.physics.add.group();
             this.caja = new caja(this, 64, 64, "caja", 0)
@@ -109,6 +109,6 @@ export class VS extends Scene {
                 this.jugador2.puntos ++;
             }
         })
-        this.scene.get("Hud").update_points(this.jugador1.puntos, this.jugador2.puntos);
+        this.scene.get("Hud_VS").update_points(this.jugador1.puntos, this.jugador2.puntos);
     }
 }

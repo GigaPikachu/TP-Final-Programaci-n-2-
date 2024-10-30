@@ -1,13 +1,31 @@
 import {objetos} from "./objetos.js";
 const objeto = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "pocion",
+    "pocion",
     "pocion",
     "escudo",
-    "magia"
+    "magia",
+    "moneda",
+    "moneda",
+    "moneda",
+    "moneda",
+    "moneda",
 ];
 
 export class caja extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame) {
-        super(scene, x, y, texture, frame);
+        super(scene, x * 16, y * 16, texture, frame);
 
         //efectos de sonido
         this.romper = scene.sound.add('romper', {
@@ -21,6 +39,8 @@ export class caja extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
         scene.objetos.add(this)
+        this.setOrigin(0, 0);
+
         scene.physics.add.collider(this, scene.fondo)
         scene.physics.add.collider(this, scene.jugadores)
         scene.physics.add.collider(this, scene.hechizos, (caja, hechizo) => {

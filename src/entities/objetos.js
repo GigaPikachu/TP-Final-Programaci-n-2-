@@ -5,6 +5,12 @@ export class objetos extends Phaser.Physics.Arcade.Sprite {
         // Añadir el slime a la escena y habilitar su física
         scene.add.existing(this);
         scene.physics.add.existing(this);
+
+        this.setOrigin(0);
+
+        if (texture == ""){
+            this.destroy();
+        }
         
         scene.physics.add.overlap(this, scene.jugadores, (objeto, jugador) => {
             if (texture == "pocion"){
@@ -20,7 +26,7 @@ export class objetos extends Phaser.Physics.Arcade.Sprite {
                     }
                 }
 
-                if(frame == 2){ //pocion de velocidad
+                if(frame == 1){ //pocion de velocidad
                     jugador.velocidad = 100;
 
                     scene.time.addEvent({
@@ -56,6 +62,11 @@ export class objetos extends Phaser.Physics.Arcade.Sprite {
                     },
                 });
             }
+
+            else if (texture == "moneda"){
+                scene.monedas ++
+            }
+
             this.destroy();
         })
     }

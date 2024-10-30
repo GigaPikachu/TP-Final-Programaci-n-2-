@@ -4,7 +4,7 @@ const vida = 10;
 
 export class bandera extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, frame, tortuga) {
-        super(scene, x, y, "bandera", frame);
+        super(scene, x * 16 + 8, y * 16 - 1, "bandera", frame);
       
         // Añadir la bandera a la escena y habilitar su física
         scene.add.existing(this);
@@ -91,5 +91,9 @@ export class bandera extends Phaser.Physics.Arcade.Sprite {
         else if (this.vida[1] == 0){
             this.setFrame(0)
         }
+
+        this.barra_vida[0].setDepth(this.y);
+        this.barra_vida[1].setDepth(this.y);
+        this.setDepth(this.y);
     }
 }

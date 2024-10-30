@@ -6,7 +6,8 @@ import { MainMenu } from './scenes/Menus/MainMenu';
 import { Preloader } from './scenes/Preloader';
 
 //Hud
-import { Hud } from './scenes/Hud/Hud.js';
+import { Hud_VS } from './scenes/Hud/Hud_VS.js';
+import { Hud_Coop } from './scenes/Hud/Hud_Coop.js';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -43,7 +44,9 @@ const config = {
         Coop,
         Boot,
         GameOver,
-        Hud,
+
+        Hud_VS,
+        Hud_Coop,
     ]
 };
 

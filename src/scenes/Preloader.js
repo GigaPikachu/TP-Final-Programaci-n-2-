@@ -41,14 +41,20 @@ export class Preloader extends Scene{
             });
 
             if (true){ //objetos
-                this.load.spritesheet("caja", "./assets/sprites/caja.png", {
-                    frameWidth: 16,
-                    frameHeight: 16,
+    
+                this.load.spritesheet("puerta", "./assets/sprites/puerta.png", {
+                    frameWidth: 48,
+                    frameHeight: 32,
                 });
 
                 this.load.spritesheet("bandera", "./assets/sprites/bandera.png", {
                     frameWidth: 16,
                     frameHeight: 32,
+                });
+
+                this.load.spritesheet("caja", "./assets/sprites/caja.png", {
+                    frameWidth: 16,
+                    frameHeight: 16,
                 });
 
                 this.load.spritesheet("pocion", "./assets/sprites/pocion.png", {
@@ -57,15 +63,12 @@ export class Preloader extends Scene{
                 });
 
                 this.load.image("escudo", "./assets/sprites/escudo.png")
+
+                this.load.image("moneda", "./assets/sprites/moneda.png")
     
                 this.load.spritesheet("magia", "./assets/sprites/magia.png", {
                     frameWidth: 16,
                     frameHeight: 16,
-                });
-    
-                this.load.spritesheet("puerta", "./assets/sprites/puerta.png", {
-                    frameWidth: 48,
-                    frameHeight: 32,
                 });
             }
 
@@ -74,7 +77,7 @@ export class Preloader extends Scene{
                     frameWidth: 16,
                     frameHeight: 32,
                 });
-                this.load.spritesheet("slime2", "./assets/sprites/slime2.png", {
+                this.load.spritesheet("slime", "./assets/sprites/slime.png", {
                     frameWidth: 16,
                     frameHeight: 32,
                 });
@@ -97,13 +100,24 @@ export class Preloader extends Scene{
         if(true) { // musica
             this.load.audio("menu", "./assets/sounds/menu/menu.mp3");
             
-            this.load.audio("seleccionar", "./assets/sounds/menu/seleccionar.wav");
+            this.load.audio("seleccionar", "./assets/sounds/menu/seleccionar.mp3");
             this.load.audio("desplazarse", "./assets/sounds/menu/desplazarse.wav");
 
-            this.load.audio("lose", "./assets/sounds/players/end game (lose).mp3");
-            this.load.audio("hurt", "./assets/sounds/players/hurt.mp3");
+            if (true){ //jugador
+                this.load.audio("lose", "./assets/sounds/players/end game (lose).mp3");
+                this.load.audio("step", "./assets/sounds/players/step.mp3");
+                this.load.audio("hurt", "./assets/sounds/players/hurt.mp3");
+            }
 
-            this.load.audio("romper", "./assets/sounds/efectos de sonido/romper.wav");
+            if(true){ //enemigos
+                this.load.audio("esqueleto_step", "./assets/sounds/enemigos/esqueleto/step.mp3");
+                
+                this.load.audio("slime_hurt", "./assets/sounds/enemigos/slime/hurt.mp3");
+                this.load.audio("slime_step", "./assets/sounds/enemigos/slime/step.mp3");
+            }
+
+            this.load.audio("romper", "./assets/sounds/efectos de sonido/romper(1).mp3");
+            this.load.audio("puerta", "./assets/sounds/efectos de sonido/puerta.mp3");
         }
 
         if (true) { //interfaz

@@ -1,17 +1,28 @@
 var vida = 50
 
 export class esqueleto extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, texture, frame) {
-        super(scene, x, y, texture, frame);
+    constructor(scene, x, y, frame) {
+        super(scene, x * 16, y * 16, "esqueleto", frame);
         // Añadir el esqueleto a la escena y habilitar su física
         scene.add.existing(this);
         scene.physics.add.existing(this);
+
+        this.setOrigin(0, 1);
+
+        /* this.hurt = scene.sound.add('esqueleto_hurt', {
+            loop: false, // La música se repite en bucle
+            volume: 1, // Nivel de volumen (0 a 1)
+        }); */
+        scene.esqueleto_step = scene.sound.add('esqueleto_step', {
+            loop: false, // La música se repite en bucle
+            volume: 0.3, // Nivel de volumen (0 a 1)
+        });
 
         this.tocando_piso = true;
 
         //estadisticas
         this.velocidad = 25;
-        this.framerate_mov = this.velocidad / 4;
+        this.framerate_mov = this.velocidad / 8;
         this.distancia_min = 96;
         this.ataque = 20;
 
@@ -31,7 +42,7 @@ export class esqueleto extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.collider(this, scene.fondo)
         scene.physics.add.collider(this, scene.enemigos)
 
-        this.defAnims(scene, texture);
+        this.defAnims(scene, "esqueleto");
     }
 
     defAnims(scene, texture){
@@ -86,6 +97,10 @@ export class esqueleto extends Phaser.Physics.Arcade.Sprite {
                 if (this.jugadorcerca != null){
                     this.scene.physics.moveToObject(this, this.jugadorcerca, this.velocidad);
 
+                    if(!this.scene.esqueleto_step.isPlaying){
+                        this.scene.esqueleto_step.play();
+                    }
+
                     if (this.body.velocity.y > 0 && (this.body.velocity.x < (-this.velocidad) / 2 || this.body.velocity.x > this.velocidad / 2) ) {
                         this.anims.play("esqueleto_aba", true)
                     }
@@ -121,6 +136,10 @@ export class esqueleto extends Phaser.Physics.Arcade.Sprite {
                 this.destroy();
                 this.barra_vida[0].destroy(); this.barra_vida[1].destroy();
             }
+            
+            this.barra_vida[0].setDepth(this.y);
+            this.barra_vida[1].setDepth(this.y);
+            this.setDepth(this.y);
         }
     }
 }

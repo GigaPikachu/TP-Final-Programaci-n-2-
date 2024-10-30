@@ -2,7 +2,7 @@ var vida = 30
 
 export class hongo extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame) {
-        super(scene, x, y, texture, frame);
+        super(scene, x * 16, y * 16, texture, frame);
         // Añadir el hongo a la escena y habilitar su física
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -86,6 +86,10 @@ export class hongo extends Phaser.Physics.Arcade.Sprite {
                 this.destroy();
                 this.barra_vida[0].destroy(); this.barra_vida[1].destroy();
             }
+
+            this.barra_vida[0].setDepth(this.y);
+            this.barra_vida[1].setDepth(this.y);
+            this.setDepth(this.y);
         }
     }
 }

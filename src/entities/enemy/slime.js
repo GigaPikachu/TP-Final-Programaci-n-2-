@@ -2,7 +2,13 @@ var vida = 30
 
 export class slime extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame) {
-        super(scene, x, y, texture, frame);
+        super(scene, x * 16, y * 16, texture, frame);
+
+        scene.slime_step = scene.sound.add('slime_step', {
+            loop: false, // La música se repite en bucle
+            volume: 0.3, // Nivel de volumen (0 a 1)
+        });
+
         // Añadir el slime a la escena y habilitar su física
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -34,9 +40,7 @@ export class slime extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.collider(this, scene.enemigos)
 
         // Definir animaciones
-        if (texture == "slime2"){
-            this.defAnims(scene, texture);
-        }
+        this.defAnims(scene, texture);
     }
 
     defAnims(scene, texture){
@@ -65,6 +69,11 @@ export class slime extends Phaser.Physics.Arcade.Sprite {
                 })
     
                 if (this.jugadorcerca != null){
+
+                    if(!this.scene.slime_step.isPlaying){
+                        this.scene.slime_step.play();
+                    }
+
                     this.anims.play("salto_slime", true);
                     this.scene.physics.moveToObject(this, this.jugadorcerca, this.velocidad);
                 }
@@ -88,6 +97,10 @@ export class slime extends Phaser.Physics.Arcade.Sprite {
                 this.destroy();
                 this.barra_vida[0].destroy(); this.barra_vida[1].destroy();
             }
+            
+            this.barra_vida[0].setDepth(this.y);
+            this.barra_vida[1].setDepth(this.y);
+            this.setDepth(this.y);
         }
     }
 }

@@ -17,12 +17,12 @@ export class MainMenu extends Scene{
         //efectos de sonido
         this.desplazarse = this.sound.add('desplazarse', {
             loop: false, // La música se repite en bucle
-            volume: 1, // Nivel de volumen (0 a 1)
+            volume: 0.5, // Nivel de volumen (0 a 1)
         });
 
         this.seleccionar = this.sound.add('seleccionar', {
             loop: false, // La música se repite en bucle
-            volume: 1, // Nivel de volumen (0 a 1)
+            volume: 0.5, // Nivel de volumen (0 a 1)
         });
     }
     

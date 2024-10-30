@@ -17,26 +17,33 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
             loop: false, // La música se repite en bucle
             volume: 1, // Nivel de volumen (0 a 1)
         });
+        scene.step = scene.sound.add('step', {
+            loop: false, // La música se repite en bucle
+            volume: 0.7, // Nivel de volumen (0 a 1)
+        });
 
         //estadisticas
-        this.vida = [];
-        this.vida[0] = vida; // vida inicial
-        this.vida[1] = vida; // vida restante
+        if (true){ //estamina y vida
+            this.vida = [];
+            this.vida[0] = vida; // vida inicial
+            this.vida[1] = vida; // vida restante
+    
+            this.barra_vida = [];
+            this.barra_vida[0] = scene.physics.add.image(this.x, this.y - 12, "mini_bar");
+            this.barra_vida[1] = scene.add.rectangle(this.x, this.y - 12, 16, 3, 0xff0000); scene.physics.add.existing(this.barra_vida[1]);
+    
+            this.energia = [];
+            this.energia[0] = energia;
+            this.energia[1] = energia;
+    
+            this.barra_energia = [];
+            this.barra_energia[0] = scene.physics.add.image(this.barra_vida[0].x, this.barra_vida[0].y - 5, "mini_bar");
+            this.barra_energia[1] = scene.add.rectangle(this.barra_vida[0].x, this.barra_vida[0].y - 5, 16, 3, 0x17a589 ); scene.physics.add.existing(this.barra_energia[1]);
+        }
+
         this.liverar = true;
 
-        this.barra_vida = [];
-        this.barra_vida[0] = scene.physics.add.image(this.x, this.y - 12, "mini_bar");
-        this.barra_vida[1] = scene.add.rectangle(this.x, this.y - 12, 16, 3, 0xff0000); scene.physics.add.existing(this.barra_vida[1]);
-
-        this.energia = [];
-        this.energia[0] = energia;
-        this.energia[1] = energia;
-
-        this.barra_energia = [];
-        this.barra_energia[0] = scene.physics.add.image(this.barra_vida[0].x, this.barra_vida[0].y - 5, "mini_bar");
-        this.barra_energia[1] = scene.add.rectangle(this.barra_vida[0].x, this.barra_vida[0].y - 5, 16, 3, 0x5dade2); scene.physics.add.existing(this.barra_energia[1]);
-
-        this.velocidad = 50;
+        this.velocidad = 75;
         this.cagar_magia = 0.01;
 
         this.invulnerable = false;
@@ -59,9 +66,11 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.collider(this, scene.fondo)
         scene.physics.add.overlap(this, scene.enemigos, (jugador, enemigo) => {
             if (jugador.invulnerable == false){
-                this.camara.shake(100, 0.03);
+                if(this.frame.name != 17){
+                    this.camara.shake(100, 0.03);
+                    jugador.hurt.play()
+                }
                 jugador.vida[1] -= enemigo.ataque;
-                jugador.hurt.play()
                 jugador.invulnerable = true;
 
                 scene.time.addEvent({
@@ -216,6 +225,9 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
 
             if (this.moverse == true && this.accion == false) {
                 this.anims.play(texture + this.mirar, true);
+                if(!scene.step.isPlaying){
+                    scene.step.play();
+                }
             }
 
             else if (this.moverse === false && this.accion === false) {
@@ -260,6 +272,10 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
             }
             else {
                 this.body.setVelocityX(0);
+            }
+
+            if (this.teclas.T2.isDown && this.accion == false){
+                this.body.setVelocityX(this.velocidad);
             }
         }
 
@@ -309,7 +325,9 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
                     if(scene.jugador1.vida[1] > 0 || scene.jugador2.vida[1] > 0) {
 
                         scene.physics.add.overlap(this, scene.jugadores, (yo, compañero) => {
-                            this.vida[1] = this.vida[0] / 2;
+                            if (this.vida[1] <= 0){
+                                this.vida[1] = this.vida[0] / 2;
+                            }
                             scene.jugadores.add(this);
                             this.velocidad = 50;
                         })
@@ -317,10 +335,18 @@ export class jugador extends Phaser.Physics.Arcade.Sprite {
                     }
 
                     else {
+                        scene.scene.stop("Hud_Coop")
                         scene.scene.start("GameOver", {text: scene.text, idioma: scene.idioma,});
                     }
                 }
             };
         };
+
+        //orden de capas de textura
+        this.barra_energia[0].setDepth(this.y);
+        this.barra_energia[1].setDepth(this.y);
+        this.barra_vida[0].setDepth(this.y);
+        this.barra_vida[1].setDepth(this.y);
+        this.setDepth(this.y);
     };
 };
