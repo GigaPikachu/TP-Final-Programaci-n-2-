@@ -1,3 +1,5 @@
+import {objetos} from "../objetos/objetos.js";
+
 var vida = 50
 
 export class esqueleto extends Phaser.Physics.Arcade.Sprite {
@@ -7,24 +9,34 @@ export class esqueleto extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.setOrigin(0, 1);
+        this.setOrigin(0, 0);
 
         /* this.hurt = scene.sound.add('esqueleto_hurt', {
             loop: false, // La música se repite en bucle
             volume: 1, // Nivel de volumen (0 a 1)
         }); */
+
         scene.esqueleto_step = scene.sound.add('esqueleto_step', {
             loop: false, // La música se repite en bucle
             volume: 0.3, // Nivel de volumen (0 a 1)
         });
 
-        this.tocando_piso = true;
+        //particulas 
+        this.emitter = scene.add.particles(0, 0, "particulas", {
+            speed: 10, // Establece la velocidad inicial de las partículas a 100 unidades (la dirección se determina aleatoriamente)
+            lifespan: 1000, //tiempo de vida de cada particuña //1000 milisagundos = 1 segundo
+            scale: { start: 1, end: 1 }, // Establece la escala de las partículas desde 1 (tamaño completo) hasta 0 (desapareciendo gradualmente)
+        });
 
         //estadisticas
         this.velocidad = 25;
         this.framerate_mov = this.velocidad / 8;
         this.distancia_min = 96;
         this.ataque = 20;
+        this.tiempo_invul = 250; //tiempo de invulnerabilidad
+        this.invulnerable = false;
+
+        this.randome = Math.floor(Math.random() * (100 - 0 + 1));
 
         this.estado = "nada"
 
@@ -37,7 +49,6 @@ export class esqueleto extends Phaser.Physics.Arcade.Sprite {
         this.barra_vida[1] = scene.add.rectangle(this.x, this.y - 16, 16, 3, 0xff0000); scene.physics.add.existing(this.barra_vida[1]);
 
         //colicionadores
-        this.setOrigin(0.75);
         scene.enemigos.add(this);
         scene.physics.add.collider(this, scene.fondo)
         scene.physics.add.collider(this, scene.enemigos)
@@ -127,12 +138,24 @@ export class esqueleto extends Phaser.Physics.Arcade.Sprite {
 
         if (true) { //barra de vida
             for(this.i = 0; this.i <= 1; this.i ++){
-                this.barra_vida[this.i].x = this.x; this.barra_vida[this.i].y = this.y - 16;
+                this.barra_vida[this.i].x = this.x + 8; this.barra_vida[this.i].y = this.y - 4;
             }
 
             this.barra_vida[1].setSize(16 / this.vida[0] * this.vida[1], 3);
 
-            if (this.vida[1] <= 0){
+            if (this.vida[1] <= 0){ //muerte
+                if (this.randome > 0){
+                    this.objeto = new objetos (this.scene, this.x, this.y, "moneda", 0, 0)
+                    this.objeto.moneda.play
+                }
+                // Detener el emisor
+                this.emitter.startFollow(this, 0, 0);
+                this.scene.time.addEvent({
+                    delay: 100, // Tiempo en milisegundos (3 segundos)
+                    callback: () => {
+                        this.emitter.stop(); // Detiene el emisor de partículas
+                    }
+                })
                 this.destroy();
                 this.barra_vida[0].destroy(); this.barra_vida[1].destroy();
             }

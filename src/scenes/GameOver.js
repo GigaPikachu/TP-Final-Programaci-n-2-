@@ -40,6 +40,7 @@ export class GameOver extends Scene
             this.musica.play();
             this.jugador1.setFrame(17)
             this.jugador2.setFrame(17)
+            this.GameOver = this.add.image(0, 0, "GameOver").setOrigin(0, 0);
         }
 
         this.add.text(320 / 2, 32, this.text[7][this.idioma], {
@@ -50,7 +51,7 @@ export class GameOver extends Scene
 
         this.input.once('pointerdown', () => {
 
-            this.scene.start('MainMenu');
+            window.location.reload();
 
         });
     }

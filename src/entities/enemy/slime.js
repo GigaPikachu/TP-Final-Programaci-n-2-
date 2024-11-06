@@ -1,12 +1,23 @@
+import {objetos} from "../objetos/objetos.js";
+
 var vida = 30
 
 export class slime extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture, frame) {
         super(scene, x * 16, y * 16, texture, frame);
 
+        //efectos de sonido
         scene.slime_step = scene.sound.add('slime_step', {
             loop: false, // La música se repite en bucle
             volume: 0.3, // Nivel de volumen (0 a 1)
+        });
+
+        //particulas 
+        this.emitter = scene.add.particles(0, 0, "particulas", {
+            speed: 10, // Establece la velocidad inicial de las partículas a 100 unidades (la dirección se determina aleatoriamente)
+            lifespan: 1000, //tiempo de vida de cada particuña //1000 milisagundos = 1 segundo
+            scale: { start: 1, end: 1 }, // Establece la escala de las partículas desde 1 (tamaño completo) hasta 0 (desapareciendo gradualmente)
+            frame: 1,
         });
 
         // Añadir el slime a la escena y habilitar su física
@@ -15,7 +26,6 @@ export class slime extends Phaser.Physics.Arcade.Sprite {
 
         this.body.setSize(16, 16);
         this.body.setOffset(0, 16);
-        this.tocando_piso = true;
 
         //estadisticas
         this.velocidad = 25;
@@ -23,11 +33,15 @@ export class slime extends Phaser.Physics.Arcade.Sprite {
         this.distancia_min = 96;
         this.ataque = 20;
 
+        this.randome = Math.floor(Math.random() * (100 - 0 + 1));
+
         this.estado = "nada"
 
         this.vida = []
         this.vida[0] = vida // vida inicial
         this.vida[1] = vida // vida restante
+        this.tiempo_invul = 250; //tiempo de invulnerabilidad
+        this.invulnerable = false;
 
         this.barra_vida = []
         this.barra_vida[0] = scene.physics.add.image(this.x, this.y - 12, "mini_bar");
@@ -88,12 +102,25 @@ export class slime extends Phaser.Physics.Arcade.Sprite {
 
         if (true) { //barra de vida
             for(this.i = 0; this.i <= 1; this.i ++){
-                this.barra_vida[this.i].x = this.x; this.barra_vida[this.i].y = this.y - 4;
+                this.barra_vida[this.i].x = this.x - 4; this.barra_vida[this.i].y = this.y - 12;
             }
 
             this.barra_vida[1].setSize(16 / this.vida[0] * this.vida[1], 3);
 
-            if (this.vida[1] <= 0){
+            if (this.vida[1] <= 0){ //muerte
+                if (this.randome > 90){
+                    this.objeto = new objetos (this.scene, this.x, this.y, "escudo", 0, 0)
+                    this.objeto.moneda.play
+                }
+                // Detener el emisor
+                this.emitter.startFollow(this, 0, 0);
+                this.scene.time.addEvent({
+                    delay: 100, // Tiempo en milisegundos (3 segundos)
+                    callback: () => {
+                        this.emitter.stop(); // Detiene el emisor de partículas
+                    }
+                })
+                
                 this.destroy();
                 this.barra_vida[0].destroy(); this.barra_vida[1].destroy();
             }

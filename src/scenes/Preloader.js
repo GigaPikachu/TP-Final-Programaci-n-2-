@@ -42,14 +42,47 @@ export class Preloader extends Scene{
 
             if (true){ //objetos
     
-                this.load.spritesheet("puerta", "./assets/sprites/puerta.png", {
-                    frameWidth: 48,
-                    frameHeight: 32,
-                });
+                if(true){ //puzles y puertas
+                    this.load.spritesheet("puerta", "./assets/sprites/puerta.png", {
+                        frameWidth: 48,
+                        frameHeight: 32,
+                    });
+    
+                    this.load.spritesheet("bandera", "./assets/sprites/bandera.png", {
+                        frameWidth: 16,
+                        frameHeight: 32,
+                    });
+        
+                    this.load.spritesheet("candado", "./assets/sprites/candado.png", {
+                        frameWidth: 16,
+                        frameHeight: 64,
+                    });
+        
+                    this.load.spritesheet("boton", "./assets/sprites/boton.png", {
+                        frameWidth: 16,
+                        frameHeight: 16,
+                    });
+    
+                    this.load.image("llave", "./assets/sprites/llave.png")
+                }
 
-                this.load.spritesheet("bandera", "./assets/sprites/bandera.png", {
+                if(true){ //mejoras permanentes
+
+                    this.load.spritesheet("+vida", "./assets/sprites/+vida.png", {
+                        frameWidth: 16,
+                        frameHeight: 16,
+                    });
+
+                    this.load.spritesheet("+magia", "./assets/sprites/+magia.png", {
+                        frameWidth: 16,
+                        frameHeight: 16,
+                    });
+
+                }
+
+                this.load.spritesheet("vendedor", "./assets/sprites/vendedor.png", {
                     frameWidth: 16,
-                    frameHeight: 32,
+                    frameHeight: 16,
                 });
 
                 this.load.spritesheet("caja", "./assets/sprites/caja.png", {
@@ -85,10 +118,27 @@ export class Preloader extends Scene{
                     frameWidth: 16,
                     frameHeight: 16,
                 });
-
-                this.load.spritesheet("nigromante", "./assets/sprites/nigromante.png", {
+                this.load.spritesheet("fantasma", "./assets/sprites/fantasma.png", {
                     frameWidth: 16,
-                    frameHeight: 24,
+                    frameHeight: 32,
+                });
+
+                if (true){//jefes
+                    
+                    this.load.spritesheet("craneo", "./assets/sprites/craneo.png", {
+                        frameWidth: 32,
+                        frameHeight: 40,
+                    });
+
+                    this.load.spritesheet("nigromante", "./assets/sprites/nigromante.png", {
+                        frameWidth: 16,
+                        frameHeight: 24,
+                    });
+                }
+
+                this.load.spritesheet("particulas", "./assets/sprites/particulas.png", {
+                    frameWidth: 8,
+                    frameHeight: 8,
                 });
             }
 
@@ -97,7 +147,7 @@ export class Preloader extends Scene{
             this.load.image("ingles", "./assets/images/ingles.png")
         }
 
-        if(true) { // musica
+        if(true) { // musica y efectos de sonido
             this.load.audio("menu", "./assets/sounds/menu/menu.mp3");
             
             this.load.audio("seleccionar", "./assets/sounds/menu/seleccionar.mp3");
@@ -116,30 +166,38 @@ export class Preloader extends Scene{
                 this.load.audio("slime_step", "./assets/sounds/enemigos/slime/step.mp3");
             }
 
-            this.load.audio("romper", "./assets/sounds/efectos de sonido/romper(1).mp3");
-            this.load.audio("puerta", "./assets/sounds/efectos de sonido/puerta.mp3");
+            if (true){
+                this.load.audio("romper", "./assets/sounds/efectos de sonido/romper(1).mp3");
+                this.load.audio("puerta", "./assets/sounds/efectos de sonido/puerta.mp3");
+                this.load.audio("boton", "./assets/sounds/efectos de sonido/boton.mp3");
+                this.load.audio("candado", "./assets/sounds/efectos de sonido/candado.mp3");
+                this.load.audio("llave", "./assets/sounds/efectos de sonido/llaves.mp3");
+                this.load.audio("moneda", "./assets/sounds/efectos de sonido/moneda.mp3");
+                this.load.audio("pocion", "./assets/sounds/efectos de sonido/pocion.mp3");
+            }
         }
 
         if (true) { //interfaz
             //barra de vida
             this.load.image("player_bar", "./assets/images/barra de vida.png")
             this.load.image("mini_bar", "./assets/images/mini barra de vida.png")
+            this.load.image("vision", "./assets/background/vision.png");
         }
 
         if (true) { //Tiles
             this.load.image("MainMenu", "./assets/background/MainMenu.png");
             this.load.image("fundido", "./assets/background/fundido.png");
             this.load.image("fondo", "./assets/background/background.png");
-            this.load.image("vision", "./assets/background/vision.png");
 
-            //mapa de pruebas
-    
-            this.load.tilemapTiledJSON("map", "./assets/tilemaps/mapa.json");
+            this.load.image("GameOver", "./assets/background/GameOver.png");
 
             //Coop Nivel 1
             this.load.image("tileset", "./assets/images/tileset.png");
     
             this.load.tilemapTiledJSON("Nivel_1", "./assets/background/Coop/Nivel_1.json");
+            this.load.tilemapTiledJSON("Nivel_2", "./assets/background/Coop/Nivel_2.json");
+            this.load.tilemapTiledJSON("Nivel_3", "./assets/background/Coop/Nivel_3.json");
+            this.load.tilemapTiledJSON("Jefe_map", "./assets/background/Coop/Jefe_map.json");
 
         }
 
@@ -156,8 +214,6 @@ export class Preloader extends Scene{
             const response = await fetch(url);  // Obtener el archivo CSV
             const data = await response.text(); // Convertir la respuesta a texto
             const text = data.split('\n').map(row => row.split(',')); // Dividir en filas y columnas
-      
-            console.log(text); // Aquí tienes los datos del CSV en un array
             this.scene.start('MainMenu', {text: text, idioma: idioma,});
         }
         

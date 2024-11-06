@@ -38,6 +38,7 @@ function Hechizo (jugador, scene, texture){
         }
     
         else if (jugador.teclas.T1.isDown && jugador.magia[jugador.magia_id].active){ //mantener cargato el hechizo
+            jugador.setVelocity(0, 0);
             jugador.magia[jugador.magia_id].radius += jugador.cagar_magia;
             jugador.magia[jugador.magia_id].daño += jugador.cagar_magia * 3;
             jugador.magia[jugador.magia_id].setSize(jugador.magia[jugador.magia_id].radius, jugador.magia[jugador.magia_id].radius);
@@ -73,7 +74,7 @@ function Hechizo (jugador, scene, texture){
                 if (scene.scene.key == "VS"){
                     scene.physics.add.collider(jugador.magia[jugador.magia_id], scene.jugadores, (magia, jugadores) => { //golpear al otro jugador
                         if(jugadores != jugador){ //verifica que el jugador golpeado no sea a si mismo
-                            magia.destruir()
+                            magia.destruir(scene)
                             jugadores.vida[1] -= magia.daño;
                             jugadores.camara.shake(100, 0.03);
                             jugadores.hurt.play()
@@ -82,40 +83,71 @@ function Hechizo (jugador, scene, texture){
                 }
     
                 scene.physics.add.collider(scene.hechizos, scene.fondo, (hechizo, pared) => {
-                    hechizo.destruir()
+                    hechizo.destruir(scene)
                 })
         
-                scene.physics.add.collider(jugador.magia[jugador.magia_id], scene.enemigos, (magia, enemigo) => { //golpea a un enemigo
-                    magia.destruir()
-                    enemigo.vida[1] -= magia.daño;
-                    console.log(magia.daño);
+                scene.physics.add.overlap(jugador.magia[jugador.magia_id], scene.enemigos, (magia, enemigo) => { //golpea a un enemigo
+                    if (enemigo.invulnerable === false){
+                        enemigo.vida[1] -= magia.daño;
+                        enemigo.invulnerable = true;
+        
+                        scene.time.addEvent({
+                            delay: enemigo.tiempo_invul,
+                            loop: false,
+                            callback: () => {
+                                enemigo.invulnerable = false
+                            },
+                        });
+                    }
+                    magia.destruir(scene)
                 });
             })
         }
     }
 
     if (true){ // impulso
-        if(jugador.teclas.T2.isDown && jugador.accion == false){
-        
+        if(jugador.teclas.T2.isDown && jugador.accion == false && jugador.energia[1] >= 30 && jugador.impulso[0] == false && jugador.impulso[1] == false){
+            jugador.energia[1] -= 30
+            jugador.impulso[0] = true;
+            jugador.impulso[1] = true;
+            jugador.invulnerable = true;
+
             if (jugador.mirar == "derecha"){
-                jugador.anims.play(texture + "accion" + jugador.mirar, true);
-                jugador.body.setVelocityX(-100);
+                jugador.setFrame(15);
+                jugador.body.setVelocityX(500);
             }
 
             else if (jugador.mirar == "izquierda"){
-                jugador.anims.play(texture + "accion" + jugador.mirar, true);
-                jugador.body.setVelocityX(100);
+                jugador.setFrame(13);
+                jugador.body.setVelocityX(-500);
             }
 
             else if (jugador.mirar == "arriba"){
-                jugador.anims.play(texture + "accion" + jugador.mirar, true);
-                jugador.body.setVelocityY(-100);
+                jugador.setFrame(11);
+                jugador.body.setVelocityY(-500);
             }
 
             else if (jugador.mirar == "abajo"){
-                jugador.anims.play(texture + "accion" + jugador.mirar, true);
-                jugador.body.setVelocityY(100);
+                jugador.setFrame(9);
+                jugador.body.setVelocityY(500);
             }
+
+            scene.time.addEvent({
+                delay: 150,
+                loop: false,
+                callback: () => {
+                    jugador.impulso[0] = false
+                    jugador.invulnerable = false;
+                
+                    scene.time.addEvent({
+                        delay: 1000,
+                        loop: false,
+                        callback: () => {
+                            jugador.impulso[1] = false;
+                        },
+                    });
+                },
+            });
         }
     }
 /* 
@@ -163,12 +195,13 @@ function Hechizo (jugador, scene, texture){
             })
         }
     }*/
-    
+
     if (/* hechizo[1] == "escudo" */ true){ //crear magia escudo
         if(jugador.teclas.T3.isDown && jugador.accion == false && jugador.energia[1] > 60){
+            jugador.setVelocity(0, 0);
             if (jugador.escudo != null || jugador.escudo == []){
                 for (var h = 1; h < 4; h ++){
-                    jugador.magia[jugador.escudo[h]].destruir();
+                    jugador.magia[jugador.escudo[h]].destruir(scene);
                 }
             }
 
@@ -187,7 +220,6 @@ function Hechizo (jugador, scene, texture){
                         if (scene.scene.key == "VS"){
                             scene.physics.add.collider(jugador.magia[i], scene.jugadores, (magia, jugadores) => { //golpear al otro jugador
                                 if(jugadores != jugador){ //verifica que el jugador golpeado no sea a si mismo
-                                    magia.destruir()
                                     jugadores.vida[1] -= magia.daño;
                                     jugadores.hurt.play()
                                     jugadores.camara.shake(100, 0.03);
@@ -196,8 +228,18 @@ function Hechizo (jugador, scene, texture){
                         }
                 
                         scene.physics.add.collider(jugador.magia[i], scene.enemigos, (magia, enemigo) => { //golpea a un enemigo
-                            magia.destruir()
-                            enemigo.vida[1] -= magia.daño;
+                            if (enemigo.invulnerable === false){
+                                enemigo.vida[1] -= magia.daño;
+                                enemigo.invulnerable = true;
+                
+                                scene.time.addEvent({
+                                    delay: enemigo.tiempo_invul,
+                                    loop: false,
+                                    callback: () => {
+                                        enemigo.invulnerable = false
+                                    },
+                                });
+                            }
                         });
                         break;
                     }

@@ -17,7 +17,7 @@ export class Hud_Coop extends Scene {
     this.vision2 = this.physics.add.image(176, 0, "vision").setOrigin(0);
 
     this.monedas = [];
-    this.monedas[0] = this.physics.add.image(164, 0, "moneda").setOrigin(0);
+    this.monedas[0] = this.physics.add.image(160, 0, "moneda").setOrigin(0);
     this.monedas[1] = this.add.text(169, 14, "0", {fontFamily: 'GameBoy', fontSize: 8, color: '#ffffff',stroke: '#000000', strokeThickness: 4, align: 'center'}).setOrigin(0.5);
   }
 

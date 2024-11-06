@@ -1,6 +1,6 @@
 export class next_level extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y) {
-        super(scene, x, y);
+    constructor(scene, x, y, Level) {
+        super(scene, x * 16, y * 16);
 
         // Añadir el objeto a la escena
         scene.add.existing(this);
@@ -13,6 +13,8 @@ export class next_level extends Phaser.Physics.Arcade.Sprite {
         // Inicializar las banderas para los jugadores
         this.jugador1EnZona = false;
         this.jugador2EnZona = false;
+
+        this.next_level = Level + 1;
 
         // Añadir overlap para ambos jugadores
         scene.physics.add.overlap(this, scene.jugador1, this.onPlayerOverlap, null, this);
@@ -33,7 +35,7 @@ export class next_level extends Phaser.Physics.Arcade.Sprite {
     update() {
         // Verificar si alguno de los jugadores ha hecho overlap
         if (this.jugador1EnZona && this.jugador2EnZona) {
-            this.scene.scene.start('GameOver'); // Cambiar de escena
+            this.scene.scene.start('Coop' + this.next_level, {text: this.scene.text, idioma: this.scene.idioma, monedas: this.scene.monedas, vida: [this.scene.jugador1.vida[0], this.scene.jugador2.vida[0]]} ); // Cambiar de escena
         }
     }
 }

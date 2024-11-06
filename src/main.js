@@ -1,6 +1,9 @@
 import { Boot } from './scenes/Boot';
 import { VS } from './scenes/VSmode';
 import { Coop } from './scenes/Coop';
+import { Coop2 } from './scenes/Coop2';
+import { Coop3 } from './scenes/Coop3';
+import { Jefe_map1 } from './scenes/Jefe_map.js';
 import { GameOver } from './scenes/GameOver';
 import { MainMenu } from './scenes/Menus/MainMenu';
 import { Preloader } from './scenes/Preloader';
@@ -41,7 +44,12 @@ const config = {
         Preloader,
         MainMenu,
         VS,
+
         Coop,
+        Coop2,
+        Jefe_map1,
+        Coop3,
+
         Boot,
         GameOver,
 

@@ -11,7 +11,7 @@ export class magia extends Phaser.GameObjects.Arc {
         // Crea un emisor de partículas en la posición (0, 0) usando una textura con la clave "red"
         this.emitter = scene.add.particles(0, 0, "magias", { 
             speed: 10, // Establece la velocidad inicial de las partículas a 100 unidades (la dirección se determina aleatoriamente)
-            lifespan: 100, //tiempo de vida de cada particuña //1000 milisagundos = 1 segundo
+            lifespan: 200, //tiempo de vida de cada particuña //1000 milisagundos = 1 segundo
             scale: { start: 1, end: 0 }, // Establece la escala de las partículas desde 1 (tamaño completo) hasta 0 (desapareciendo gradualmente)
         });
 
@@ -20,10 +20,28 @@ export class magia extends Phaser.GameObjects.Arc {
         this.daño = 20;
 
         this.emitter.startFollow(this, 0, 0);
+        
+        scene.time.addEvent({
+            delay: 3000,
+            loop: false,
+            callback: () => {
+                if(this.active){
+                    this.destruir(scene)
+                }
+            }
+        });
     }
 
-    destruir(){
+    destruir(scene){
+        
+        scene.time.addEvent({
+            delay: 100, // Tiempo en milisegundos (3 segundos)
+            callback: () => {
+                this.emitter.stop(); // Detiene el emisor de partículas
+            }
+        });
+        
         this.destroy();
-        this.emitter.destroy();
     }
+
 }
