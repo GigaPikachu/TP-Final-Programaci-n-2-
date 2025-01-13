@@ -154,9 +154,12 @@ export class Preloader extends Scene{
             this.load.audio("desplazarse", "./assets/sounds/menu/desplazarse.wav");
 
             if (true){ //jugador
-                this.load.audio("lose", "./assets/sounds/players/end game (lose).mp3");
+                this.load.audio("lose", "./assets/sounds/menu/seleccionar.mp3");
                 this.load.audio("step", "./assets/sounds/players/step.mp3");
                 this.load.audio("hurt", "./assets/sounds/players/hurt.mp3");
+
+                this.load.audio("fireball", "./assets/sounds/players/fireball.mp3");
+                this.load.audio("fire", "./assets/sounds/players/fire.mp3");
             }
 
             if(true){ //enemigos
